@@ -1,0 +1,89 @@
+{% url 'home' as home %}
+{% url 'about' as about %}
+{% url 'contact' as contact %}
+{% url 'blog:all_post' as all_post %}
+{% url 'blog:archive' as archive %}
+{% url 'blog:categories' as categories %}
+{% url 'blog:tags' as tags %}
+{% url 'book:list' as books %}
+
+{% load static %}
+
+<header class="header-nav">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <nav class="navbar navbar-expand-lg navbar-light p-0">
+            <!-- logo -->
+            <a class="navbar-brand font-weight-bold mb-0" href="{% url 'book:list' %}" title="Qurno">
+              <img class="img-fluid" width="110" height="35" src="{% static 'assets/images/logo.png' %}" alt="Qurno">
+            </a>
+  
+            <button class="search-toggle d-inline-block d-lg-none ms-auto me-1 me-sm-3" data-toggle="search" aria-label="Search Toggle">
+              <span>Search</span>
+              <svg width="22" height="22" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.5 15.5L19 19" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 11C5 14.3137 7.68629 17 11 17C12.6597 17 14.1621 16.3261 15.2483 15.237C16.3308 14.1517 17 12.654 17 11C17 7.68629 14.3137 5 11 5C7.68629 5 5 7.68629 5 11Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+  
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navHeader" aria-controls="navHeader" aria-expanded="false" aria-label="Toggle navigation">
+              <i class="ti ti-menu-2 menu-open"></i>
+              <i class="ti ti-x menu-close"></i>
+            </button>
+
+            
+  
+            <div class="collapse navbar-collapse" id="navHeader">
+              <ul class="navbar-nav mx-auto">
+                <li class="nav-item {% if request.path == home %}active{% endif %}">
+                  <a class="nav-link" href="{% url 'home' %}">Home</a>
+                </li>
+                <li class="nav-item {% if request.path == about %}active{% endif %}">
+                  <a class="nav-link" href="{% url 'about' %}">About</a>
+                </li>
+                <li class="nav-item {% if request.path == books %}active{% endif %}">
+                  <a class="nav-link" href="{% url 'book:list' %}">Books</a>
+                </li>
+                <li class="nav-item {% if request.path == contact %}active{% endif %}">
+                  <a class="nav-link" href="{% url 'contact' %}">Contact</a>
+                </li>
+                <li class="nav-item {% if request.path == all_post %}active{% endif %}">
+                  <a class="nav-link" href="{% url 'blog:all_post' %}">All Posts</a>
+                </li>
+                
+                <li class="nav-item dropdown {% if request.path == archive or request.path == tags or request.path == categories %}active{% endif %}">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Sort Posts</a>
+                  <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item" href="{% url 'blog:archive' %}">Archive</a></li>
+                    <li><a class="dropdown-item" href="{% url 'blog:categories' %}">Categories</a></li>
+                    <li><a class="dropdown-item" href="{% url 'blog:tags' %}">Tags</a></li>
+                  </ul>
+                </li>
+
+      
+              </ul>
+              
+              <div class="navbar-right d-none d-lg-inline-block">
+                <ul class="social-links list-unstyled list-inline">
+                  <li class="list-inline-item ms-4 d-none d-lg-inline-block">
+                    <button class="search-toggle" data-toggle="search" aria-label="Search Toggle">
+                      <span>Search</span>
+                      <svg width="22" height="22" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.5 15.5L19 19" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 11C5 14.3137 7.68629 17 11 17C12.6597 17 14.1621 16.3261 15.2483 15.237C16.3308 14.1517 17 12.654 17 11C17 7.68629 14.3137 5 11 5C7.68629 5 5 7.68629 5 11Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
+                  </li>
+
+                  <li class="list-inline-item ms-4 d-none d-lg-inline-block">
+                  <a href="{% url 'cart:cart_home' %}">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
+                    <span class="num" id="cart_item_num">{% if request.session.cart_items %}{{ request.session.cart_items }}{% else %}0{% endif %}</span>
+                </a>
+                  </li>
+                </ul>
+              </div>
+
+              
+              
+            </div>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </header>

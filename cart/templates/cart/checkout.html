@@ -1,0 +1,271 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Checkout{% endblock title %}
+
+{% block content %}
+
+
+{% include 'shamla_static/shamla_css.html' %}
+
+
+<!-- Checkout Start -->
+<div class="section section-padding-02 mt-n6">
+     <div class="container">
+         <!-- Checkout Info Start -->
+         <div class="checkout-info">
+            {% if messages %}
+            {% for message in messages %}
+            {% if message.tags  == 'error' %}
+            <p class="info-header error"><i class="fa fa-exclamation-circle"></i> <strong>Error:</strong> {{ message }}</p>
+            {% else %}
+            <p class="info-header error"><i class="fa fa-check-circle"></i> <strong>Success:</strong> {{ message }}</p>
+            {% endif %}
+            {% endfor %}
+            {% endif %}
+        </div>
+        <!-- Checkout Info End -->
+
+
+         <!-- Checkout Start -->
+         <div class="checkout-wrapper">
+             <form id="billing_and_shipping_form" method="post">
+                  {% csrf_token %}
+                 <div class="row">
+                     <div class="col-lg-7">
+                         <!-- Checkout Form Start -->
+                         <div class="checkout-form">
+                             <div class="checkout-title">
+                                 <h4 class="title">Billing Address</h4>
+                             </div>
+
+                             <div class="row">
+
+                               
+                                 <div class="col-sm-6">
+                                     <div class="single-form">
+                                         <label class="form-label">Full Name *</label>
+                                         <input  type="text"  name="billing_full_name" id="billing_full_name">
+                                         <small id="billing_full_name_error" style="display: none;color: red;"></small>
+                                     </div>
+                                 </div>
+                                 <div class="col-sm-6">
+                                   <div class="single-form">
+                                       <label class="form-label">Country *</label>
+                                       <input type="text"  name="billing_country" id="billing_country">
+                                       <small id="billing_country_error" style="display: none;color: red;"></small>
+                                   </div>
+                               </div>
+                               <div class="col-sm-6">
+                                   <div class="single-form">
+                                       <label class="form-label">City *</label>
+                                       <input type="text"  name="billing_city" id="billing_city">
+                                       <small id="billing_city_error" style="display: none;color: red;"></small>
+                                   </div>
+                               </div>
+                               <div class="col-sm-6">
+                                 <div class="single-form">
+                                     <label class="form-label">District *</label>
+                                     <input type="text"  name="billing_district" id="billing_district">
+                                     <small id="billing_district_error" style="display: none;color: red;"></small>
+                                 </div>
+                             </div>
+                             <div class="col-sm-6">
+                                 <div class="single-form">
+                                     <label class="form-label">Postcode / ZIP *</label>
+                                     <input type="text"  name="billing_zipcode" id="billing_zipcode">
+                                     <small id="billing_zipcode_error" style="display: none;color: red;"></small>
+                                 </div>
+                             </div>
+                                 <div class="col-sm-12">
+                                     <div class="single-form">
+                                         <label class="form-label">Street address *</label>
+                                         <input type="text"  placeholder="House number and street name"  name="billing_street" id="billing_street">
+                                         <small id="billing_street_error" style="display: none;color: red;"></small>
+                                         <input type="text" name="billing_apartment" id="billing_apartment" placeholder="Apartment, suite, unit etc. (optional)">
+                                     </div>
+                                 </div>
+                                 <div class="col-sm-6">
+                                     <div class="single-form">
+                                         <label class="form-label">Phone *</label>
+                                         <input type="number" maxlength="14"  name="billing_phone" id="billing_phone">
+                                         <small id="billing_phone_error" style="display: none;color: red;"></small>
+                                     </div>
+                                 </div>
+                                 <div class="col-sm-6">
+                                     <div class="single-form">
+                                         <label class="form-label">Email address *</label>
+                                         <input type="email"  name="billing_email" id="billing_email">
+                                         <small id="billing_email_error" style="display: none;color: red;"></small>
+                                     </div>
+                                 </div>
+                             </div>
+
+                             <div class="single-form">
+                                 <input type="checkbox" id="shipping" name="shipping">
+                                 <label for="shipping"><span></span> Ship to a different address?</label>
+                             </div>
+                             <br>
+
+                             <div class="checkout-shipping">
+                              <div class="checkout-title">
+                                   <h4 class="title">Shipping Address</h4>
+                               </div>
+  
+                               <div class="row">
+  
+                              
+                                   <div class="col-sm-6">
+                                       <div class="single-form">
+                                           <label class="form-label">Full Name *</label>
+                                           <input type="text" name="shipping_full_name" id="shipping_full_name">
+                                           <small id="shipping_full_name_error" style="display: none;color: red;"></small>
+                                       </div>
+                                   </div>
+                                   <div class="col-sm-6">
+                                     <div class="single-form">
+                                         <label class="form-label">Country *</label>
+                                         <input type="text" name="shipping_country" id="shipping_country">
+                                         <small id="shipping_country_error" style="display: none;color: red;"></small>
+                                     </div>
+                                 </div>
+                                 <div class="col-sm-6">
+                                     <div class="single-form">
+                                         <label class="form-label">City *</label>
+                                         <input type="text" name="shipping_city" id="shipping_city">
+                                         <small id="shipping_city_error" style="display: none;color: red;"></small>
+                                     </div>
+                                 </div>
+                                 <div class="col-sm-6">
+                                   <div class="single-form">
+                                       <label class="form-label">District *</label>
+                                       <input type="text" name="shipping_district" id="shipping_district">
+                                       <small id="shipping_district_error" style="display: none;color: red;"></small>
+                                   </div>
+                               </div>
+                               <div class="col-sm-6">
+                                   <div class="single-form">
+                                       <label class="form-label">Postcode / ZIP *</label>
+                                       <input type="text" name="shipping_zipcode" id="shipping_zipcode">
+                                       <small id="shipping_zipcode_error" style="display: none;color: red;"></small>
+                                   </div>
+                               </div>
+                                   <div class="col-sm-12">
+                                       <div class="single-form">
+                                           <label class="form-label">Street address *</label>
+                                           <input type="text" placeholder="House number and street name" name="shipping_street" id="shipping_street">
+                                           <small id="shipping_street_error" style="display: none;color: red;"></small>
+                                           <input type="text" placeholder="Apartment, suite, unit etc. (optional)" name="shipping_apartment" id="shipping_apartment">
+                                       </div>
+                                   </div>
+                                   <div class="col-sm-6">
+                                       <div class="single-form">
+                                           <label class="form-label">Phone *</label>
+                                           <input type="number" maxlength="14" name="shipping_phone" id="shipping_phone">
+                                           <small id="shipping_phone_error" style="display: none;color: red;"></small>
+                                       </div>
+                                   </div>
+                                   <div class="col-sm-6">
+                                       <div class="single-form">
+                                           <label class="form-label">Email address *</label>
+                                           <input type="email" name="shipping_email" id="shipping_email">
+                                           <small id="shipping_email_error" style="display: none;color: red;"></small>
+                                       </div>
+                                   </div>
+                               </div>
+                             </div>
+
+                             <div class="single-form checkout-note">
+                                 <label class="form-label">Order notes</label>
+                                 <textarea placeholder="Notes about your order, e.g. special notes for delivery." name="order_note"></textarea>
+                             </div>
+                         </div>
+                         <!-- Checkout Form End -->
+                     </div>
+                     <div class="col-lg-5">
+                         <!-- Checkout Form Start -->
+                         <div class="checkout-order">
+                             <div class="checkout-title">
+                                 <h4 class="title">Your Order</h4>
+                             </div>
+
+                             <div class="checkout-order-table table-responsive">
+                                 <table class="table">
+                                     <thead>
+                                         <tr>
+                                             <th class="Product-name">Book</th>
+                                             <th class="Product-price">Total</th>
+                                         </tr>
+                                     </thead>
+                                     <tbody>
+                                        {% for item in cart_obj.cartbook_set.all %}
+                                         <tr>
+                                             <td class="Product-name">
+                                                 <p>{{ item.book.title|truncatechars:35 }} × {{ item.book_quantity }}</p>
+                                             </td>
+                                             <td class="Product-price">
+                                                 <p>${{ item.subtotal_price }}</p>
+                                             </td>
+                                         </tr>
+                                         {% endfor %}
+                                     </tbody>
+                                     <tfoot>
+                                         <tr>
+                                             <td class="Product-name">
+                                                 <p>Subtotal</p>
+                                             </td>
+                                             <td class="Product-price">
+                                                 <p>{% if cart_obj %}${{ cart_obj.subtotal }}{% else %}$0.00{% endif %}</p>
+                                             </td>
+                                         </tr>
+                                         <tr>
+                                            <td class="Product-name">
+                                                <p>Shipping</p>
+                                            </td>
+                                            <td class="Product-price">
+                                                <p>{% if cart_obj %}${{ cart_obj.shipment_fee }}{% else %}$0.00{% endif %}</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                           <td class="Product-name">
+                                               <p>Quantity</p>
+                                           </td>
+                                           <td class="Product-price">
+                                               <p>{% if cart_obj %}{{ cart_obj.current_item_num }}{% else %}0{% endif %}</p>
+                                           </td>
+                                       </tr>
+                                         <tr>
+                                             <td class="Product-name">
+                                                 <p>Total</p>
+                                             </td>
+                                             <td class="total-price">
+                                                 <p>{% if cart_obj %}${{ cart_obj.total }}{% else %}$0.00{% endif %}</p>
+                                             </td>
+                                         </tr>
+                                     </tfoot>
+                                 </table>
+                             </div>
+
+                             <div class="checkout-payment">
+                                 <div class="cart-total-btn d-grid">
+                                     <button id="place_order_button" class="btn btn-dark btn-hover-primary rounded-pill">Place Order</button>
+                                 </div>
+                             </div>
+                         </div>
+                         <!-- Checkout Form End -->
+                     </div>
+                 </div>
+             </form>
+         </div>
+         <!-- Checkout End -->
+     </div>
+ </div>
+ <!-- Checkout End -->
+
+
+{% include 'shamla_static/shamla_js.html' %}
+{% endblock content %}
+
+
+{% block script %}
+{% include 'cart/js_file/checkout_script.html' %}
+{% endblock script %}

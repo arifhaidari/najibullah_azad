@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Categories{% endblock title %}
+
+{% block content %}
+
+<section class="page-header section-sm">
+     <div class="container">
+       <div class="row">
+         <div class="col-lg-12 text-center">
+           <h1 class="section-title h2 mb-3">
+             <span>Tags</span>
+           </h1>
+           <ul class="list-inline breadcrumb-menu mb-3">
+             <li class="list-inline-item"><a href="{% url 'home' %}"><i class="ti ti-home"></i>  <span>Home</span></a></li>
+             <li class="list-inline-item">• &nbsp; <a href="#"><span>Categories</span></a></li>
+           </ul>
+         </div>
+       </div>
+     </div>
+   </section>
+
+   <div class="container">
+     <div class="row g-4 justify-content-center text-center">
+       <div class="col-lg-4 col-sm-6">
+         <a class="p-4 rounded bg-white d-block is-hoverable" href="categories-single.html">
+           <span class="h3"><i class="ti ti-color-swatch mb-2"></i></span>
+           <span class="h4 mt-2 mb-3 d-block"> AI</span>
+           Total 2 posts
+         </a>
+       </div>
+       
+       <div class="col-lg-4 col-sm-6">
+         <a class="p-4 rounded bg-white d-block is-hoverable" href="categories-single.html">
+           <span class="h3"><i class="ti ti-color-swatch mb-2"></i></span>
+           <span class="h4 mt-2 mb-3 d-block"> Earth</span>
+           Total 3 posts
+         </a>
+       </div>
+       
+       <div class="col-lg-4 col-sm-6">
+         <a class="p-4 rounded bg-white d-block is-hoverable" href="categories-single.html">
+           <span class="h3"><i class="ti ti-color-swatch mb-2"></i></span>
+           <span class="h4 mt-2 mb-3 d-block"> Tech</span>
+           Total 4 posts
+         </a>
+       </div>
+     </div>
+   </div>
+   
+  
+
+{% endblock content %}
+
+{% block script %}
+{% endblock script %}

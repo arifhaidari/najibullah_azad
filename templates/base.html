@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <title>{% block title %}Najibullah Azad{% endblock title %}</title>
+     {% include 'css.html' %}
+</head>
+<body>
+     <div class="header-height-fix"></div>
+     {% include 'header.html' %}
+     {% include 'search_block.html' %}
+
+     {% block content %}{% endblock content %}
+
+
+     {% include 'footer.html' %}
+     {% include 'js.html' %}
+     {% block script %}{% endblock script %}
+</body>
+</html>
+
+

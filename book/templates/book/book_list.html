@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Books{% endblock title %}
+
+{% block content %}
+{% include 'shamla_static/shamla_css.html' %}
+
+<!-- Shop Start -->
+<div class="section section-padding-02 mt-n10">
+     <div class="container">
+
+          <!-- Tab Content Start -->
+          <div class="tab-content">
+               <div class="tab-pane fade show active" id="grid">
+                    <div class="row">
+                         <h2 class="section-title text-center">
+                              <span>Books Published Or Translated By Azad</span>
+                         </h2>
+                         {% for book in books %}
+                         <div class="col-lg-3 col-sm-6">
+                              <!-- Single-Product Start -->
+                              <div class="single-product">
+                                   <div class="product-image">
+                                        <div class="product-slide swiper-container ">
+                                             <div class="swiper-wrapper">
+                                                  {% for cover in book.bookcovers_set.all %}
+                                                  <div class="swiper-slide">
+                                                       <a href="{{ book.get_absolute_url }}">
+                                                            <img src="{{ cover.image.url }}"
+                                                                 alt="book" width="270" height="330">
+                                                       </a>
+                                                  </div>
+                                                  {% endfor %}
+                                             </div>
+                                             <!-- Add Pagination -->
+                                             <div class="swiper-pagination"></div>
+                                        </div>
+                                        <span class="product-label hot">
+                                             {{ book.category.last.name }}
+                                        </span>
+                                   </div>
+                                   <div class="product-content">
+                                        <div class="product-category-action">
+                                             <div class="product-category">
+                                                  <a href="{{ book.get_absolute_url }}">View Other Type/Price</a>
+                                             </div>
+                                             <div class="product-action">
+                                                  <a href="#" onclick="updateCartItem('{{ book.id }}', 'add', '{{ book.booktypeprice_set.first.id }}')" class="action" data-tooltip="tooltip" data-placement="top"
+                                                       title="Add to Cart"><i class="fa fa-shopping-cart"></i></a>
+                                             </div>
+                                        </div>
+                                        <h4 class="product-title"><a href="{{ book.get_absolute_url }}">{{ book.title }}</a></h4>
+                                        <div class="product-price">
+                                             <span class="">{{ book.booktypeprice_set.first.book_type.name }}</span>
+                                             <span class="sale-price">${{ book.booktypeprice_set.first.price }}</span>
+                                        </div>
+                                   </div>
+                              </div>
+                              <!-- Single-Product End -->
+                         </div>
+                         {% endfor %}
+                        
+                    </div>
+               </div>
+
+          </div>
+
+          {% if 2 == 1 %}
+          <!-- Page pagination End -->
+          <div class="page-pagination">
+               <ul class="pagination justify-content-center">
+                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link active" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item"><a class="page-link" href="#">4</a></li>
+                    <li class="page-item">...</li>
+                    <li class="page-item"><a class="page-link" href="#">15</a></li>
+               </ul>
+          </div>
+          <!-- Page pagination End -->
+          {% endif %}
+     </div>
+</div>
+<!-- Tab Content End -->
+
+
+
+{% include 'shamla_static/shamla_js.html' %}
+
+{% endblock content %}
+
+{% block script %}
+{% include 'book/js_file/update_cart_script.html' %}
+{% endblock script %}

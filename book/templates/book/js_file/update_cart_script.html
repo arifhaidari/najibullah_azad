@@ -1,0 +1,59 @@
+<script type="text/javascript"> var theToken = '{{ csrf_token }}';</script>
+<script type="text/javascript"> var cartUrl = '{% url "cart:update_cart" %}';</script>
+<script>
+
+  console.log('okay ====------')
+
+    //  update the cart
+
+    function updateCartItem(bookId, operation, bookTypeId, location = 'other', itemId = 0) {
+        console.log('vlaue of bookId, operation, bookTypeId')
+        console.log(bookId, operation, bookTypeId)
+
+        let subQuantity = 0
+
+        if (operation == 'subtract') {
+          subQuantity = Number($('#item_quantity_' + itemId).val());
+          console.log('value of theVal')
+          console.log(subQuantity)
+        }
+        
+    if(operation == 'subtract' && subQuantity > 1 || operation == 'add') {
+       const fd = new FormData();
+       fd.append('csrfmiddlewaretoken', theToken);
+       fd.append('book_id', bookId);
+       fd.append('operation', operation);
+       fd.append('book_type_id', bookTypeId);
+       fd.append('location', location);
+       $.ajax({
+         type: 'POST',
+         url: cartUrl,
+         data: fd,
+         success: function(response) {
+           console.log('value of response');
+           console.log(response);
+           if (!response.is_error) {
+               console.log('no error bro ')
+               $('#cart_item_num').html(response.quantity)
+               if(location == 'cart_home') {
+                $('#subtotal_item_price_' + itemId).text('$' + response.subtotal_item_price)
+                  $('#cart_summary_subtotal').text('$' + response.subtotal)
+                  $('#shipping_price').text('$' + response.shipment_fee)
+                  $('#cart_summary_item_number').text(response.quantity)
+                  $('#cart_summary_total').text('$' + response.total)
+               }
+           } else {
+             console.log('do not do anything');
+           }
+         },
+         error: function(error) {
+           console.log('error submitting by modal ================', error);
+         },
+         cache: false,
+         contentType: false,
+         processData: false,
+       });
+    }
+   }
+</script>
+

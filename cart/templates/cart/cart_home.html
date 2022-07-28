@@ -1,0 +1,359 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Cart{% endblock title %}
+
+{% block content %}
+
+
+{% include 'shamla_static/shamla_css.html' %}
+
+{% if object_list|length != 0 %}
+
+<!-- Cart Start -->
+<div class="section section-padding-02 mt-n1">
+    <div class="container">
+        <!-- Checkout Info Start -->
+        <div class="checkout-info">
+            <p style="display: none;" id="error_area" class="info-header error"><i class="fa fa-exclamation-circle"></i> <strong>Error:</strong> Select a region to calculate the shipment fee
+            </p>
+            {% if messages %}
+            {% for message in messages %}
+            {% if message.tags == 'error' %}
+            <p class="info-header error"><i class="fa fa-exclamation-circle"></i> <strong>Error:</strong> {{ message }}
+            </p>
+            {% else %}
+            <p class="info-header error"><i class="fa fa-check-circle"></i> <strong>Success:</strong> {{ message }}</p>
+            {% endif %}
+            {% endfor %}
+            {% endif %}
+            <br>
+        </div>
+        <!-- Checkout Info End -->
+        <!-- Cart Start -->
+        <div class="cart-wrapper">
+            <div class="cart-table table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="product-image">Image</th>
+                            <th class="product-name">Product Name</th>
+                            <th class="product-quantity">Quantity</th>
+                            <th class="product-price">Total Price</th>
+                            <th class="product-action">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cart_table">
+                        {% if object_list %}
+                        {% for item in object_list %}
+                        <tr id="book_row_{{ item.id }}">
+                            <td class="product-image">
+                                <img style="width: 98px;height: 110px;"
+                                    src="{{ item.book.bookcovers_set.first.image.url }}" alt="">
+                            </td>
+                            <td class="product-name">
+                                <a class="name" href="{% url 'book:detail' item.book.slug %}">{{ item.book.title }}</a><br>
+                                <small><strong>Type:</strong> {{ item.book_type_price.book_type.name }} </small>
+                            </td>
+                            <td class="product-quantity">
+                                <div class="product-quantity d-inline-flex">
+                                    <button type="button" onclick="updateCartItem('{{ item.book.id }}', 'subtract', '{{ item.book_type_price.id }}', 'cart_home', '{{ item.id }}')" class="sub">-</button>
+                                    <input id="item_quantity_{{ item.id }}" type="text" value="{{ item.book_quantity }}" />
+                                    <button type="button" onclick="updateCartItem('{{ item.book.id }}', 'add', '{{ item.book_type_price.id }}', 'cart_home', '{{ item.id }}')" class="add">+</button>
+                                </div>
+                            </td>
+                            <td class="product-price">
+                                <div class="product-price">
+                                    <span id="subtotal_item_price_{{ item.id }}" class="sale-price">${{ item.subtotal_price }}</span>
+                                </div>
+                            </td>
+                            <td class="product-action">
+                                <a class="close" onclick="deleteItem('{{ item.id }}')"><span
+                                        class="material-icons">clear</span></a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        {% else %}
+                        <h5 class="text-center">No Book In The Cart</h5>
+                        <br>
+                        <br>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="cart-btn">
+                <div class="cart-btn-left">
+                    <a href="{% url 'book:list' %}" class="btn btn-dark btn-hover-primary rounded-pill">Continue
+                        Shopping</a>
+                </div>
+                <div class="cart-btn-right">
+                    <a class="btn btn-outline-dark btn-hover-dark rounded-pill" data-bs-toggle="modal"
+                        data-bs-target="#clear_cart_modal">Clear Cart</a>
+                    <a href="{% url 'cart:cart_home' %}" class="btn btn-outline-dark btn-hover-dark rounded-pill">Update
+                        Cart</a>
+                </div>
+            </div>
+        </div>
+        <!-- Cart End -->
+        <form id="selected_fee_form" method="post">
+            {% csrf_token %}
+        <input type="hidden" id="select_shipment_fee" name="select_shipment_fee">
+        <div class="row">
+            <div class="col-lg-4">
+                <!-- Cart Shipping Start -->
+                <div class="cart-shipping">
+                    <div class="cart-title">
+                        <h4 class="title">Calculate Shipping</h4>
+                        {% if is_media and not is_not_media %}
+                        <p>As product is digital we will send to your email. So there is no shipping cost.</p>
+                        {% elif is_media and is_not_media %}
+                        <p>Some of your selected products are digital and some of them not. We will send the digital product to your email.</p>
+                        {% else %}
+                        <p>Estimate your shipping fee *</p>
+                        {% endif %}
+                    </div>
+                    <div class="cart-form">
+                            <div class="single-select2">
+                                <div class="form-select2">
+                                    <select id="region_select" onchange="getSelectVal(this)" class="select2">
+                                        <option value="no_selection">Select a region</option>
+                                        {% for region in shipment_method_list %}
+                                        <option value="{{ region.shipment_fee }}" >{{ region.region }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+                <!-- Cart Shipping End -->
+            </div>
+            <div class="col-lg-4">
+                <!-- Cart Shipping Start -->
+                <div class="cart-shipping">
+                    <div class="cart-title">
+                        <h4 class="title">Coupon Code</h4>
+                        <p>Enter your coupon code if you have one.</p>
+                    </div>
+                    <div class="cart-form">
+                        
+                            <div class="single-form">
+                                <input type="text" placeholder="Enter your coupon code..">
+                            </div>
+                      
+                    </div>
+                </div>
+                <!-- Cart Shipping End -->
+            </div>
+            <div class="col-lg-4">
+                <!-- Cart Totals Start -->
+                <div class="cart-totals">
+                    <div class="cart-title">
+                        <h4 class="title">Cart totals</h4>
+                    </div>
+                    <div class="cart-total-table">
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <p class="value">Subtotal</p>
+                                    </td>
+                                    <td>
+                                        <p id="cart_summary_subtotal" class="price">{% if cart_obj %}${{ cart_obj.subtotal }}{% else %}$0{% endif %}</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <p class="value">Shipping</p>
+                                    </td>
+                                    <td>
+                                        <p id="shipping_price" class="price">{% if cart_obj %}${{ cart_obj.shipment_fee }}{% else %}$0{% endif %}</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <p class="value">Quantity</p>
+                                    </td>
+                                    <td>
+                                        <p id="cart_summary_item_number" class="price">{% if cart_obj %}{{ cart_obj.current_item_num }}{% else %}0{% endif %}</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <p class="value">Total</p>
+                                    </td>
+                                    <td>
+                                        <p id="cart_summary_total" class="price">{% if cart_obj %}${{ cart_obj.total }}{% else %}$0{% endif %}</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="cart-total-btn d-grid">
+                        <button id="proceed_to_checkout_button" class="btn btn-dark btn-hover-primary rounded-pill">Proceed To Checkout</button>
+                    </div>
+                </div>
+                <!-- Cart Totals End -->
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
+<!-- Cart End -->
+
+{% else %}
+<!-- Cart Start -->
+<div class="section section-padding-02 mt-n2">
+   <div class="container">
+       <!-- empty cart Start -->
+       <div class="empty-cart text-center">
+           <h2 class="empty-cart-title">There is no item in your cart</h2>
+           <div class="empty-cart-img">
+               <img src="{%  static 'cart.png' %}" alt="">
+           </div>
+           <p>Your cart is currently empty!</p>
+           <a href="{% url 'book:list' %}" class="btn btn-hover-dark btn-primary rounded-pill"><i class="fa fa-angle-left"></i> Continue browsing</a>
+       </div>
+       <!-- empty cart End -->
+   </div>
+</div>
+<!-- Cart End -->
+{% endif %}
+
+<div class="modal" id="clear_cart_modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Clear Shopping Cart</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Do you realy want to clear cart?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" data-bs-dismiss="modal" onclick="clearCart()" class="btn btn-primary">Clear Cart</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% include 'shamla_static/shamla_js.html' %}
+{% endblock content %}
+
+{% block script %}
+{% include 'book/js_file/update_cart_script.html' %}
+<script> var clearCartUrl = '{% url "cart:clear_cart" %}';</script>
+<script> var delelteCartItemurl = '{% url "global_item_deleter" %}';</script>
+<script> var isNotMedia = '{{ is_not_media }}';</script>
+<script>
+const cartHomeForm = document.getElementById('selected_fee_form');
+const selectShipmentFee = document.getElementById('select_shipment_fee');
+const errorArea = document.getElementById('error_area');
+
+
+if(isNotMedia == 'True') {
+    $("#proceed_to_checkout_button").on('click', function () {
+     console.log('register_button got pressed')
+     cartHomeForm.addEventListener('submit', (e) => {
+          console.log('the save change button got called');
+          if (selectShipmentFee.value.trim() === '' || selectShipmentFee.value.trim() == null) {
+            errorArea.style.display = 'block';
+            e.preventDefault();
+          }
+     })
+})
+}
+
+
+    function getSelectVal(val) {
+         
+         if(this.value !== 'no_selection') {
+           document.getElementById('select_shipment_fee').value = val.value;
+              $('#shipping_price').text('$' + val.value)
+            //   $('#cart_shipment').text('$' + val.value)
+              var totalVal = $('#cart_summary_subtotal').text()
+              console.log('value of totalVal')
+              console.log(totalVal)
+              let caluclatedTotal = Number(totalVal.slice(1)) + Number(val.value)
+              console.log('value fo caluclatedTotal')
+              console.log(caluclatedTotal)
+              $('#cart_summary_total').text('$' + caluclatedTotal)
+              $('#shipment_comment').text('')
+         } else {
+           document.getElementById('select_shipment_fee').value = '0';
+         }
+         console.log('value of val')
+         console.log(val.value)
+    }
+
+    var cartTable = document.getElementById('cart_table')
+    function clearCart(cartId) {
+        const formData = new FormData();
+        formData.append('csrfmiddlewaretoken', theToken);
+        $.ajax({
+            type: 'POST',
+            url: clearCartUrl,
+            data: formData,
+            success: function (response) {
+                console.log('value of response');
+                console.log(response);
+                if (!response.is_error) {
+                    location.reload()
+
+                } else {
+                    console.log('do not do anything');
+                }
+            },
+            error: function (error) {
+                console.log('error submitting by modal ================', error);
+            },
+            cache: false,
+            contentType: false,
+            processData: false,
+        });
+    }
+
+    function deleteItem(itemId) {
+        console.log('value fo itemId')
+        console.log(itemId)
+        const formData = new FormData();
+        formData.append('csrfmiddlewaretoken', theToken);
+        formData.append('the_id', itemId);
+        formData.append('operation', 'remove_cart_item');
+        $.ajax({
+            type: 'POST',
+            url: delelteCartItemurl,
+            data: formData,
+            success: function (response) {
+                console.log('value of response');
+                console.log(response);
+                if (!response.is_error) {
+                    if(response.current_item_num[0] == 0) {
+                        location.reload();
+                    } else {
+                        console.log('no error bro.....')
+                    console.log(response.current_item_num[0])
+                    $('#book_row_' + itemId).remove()
+                    //    cart summary
+                    $('#cart_summary_subtotal').text('$' + response.subtotal)
+                    $('#shipping_price').text('$' + response.shipment_fee)
+                    $('#cart_summary_item_number').text(response.current_item_num)
+                    $('#cart_item_num').text(response.current_item_num)
+                    $('#cart_summary_total').text('$' + response.total)
+                    }
+
+                } else {
+                    console.log('do not do anything');
+                }
+            },
+            error: function (error) {
+                console.log('error submitting by modal ================', error);
+            },
+            cache: false,
+            contentType: false,
+            processData: false,
+        });
+    }
+</script>
+{% endblock script %}

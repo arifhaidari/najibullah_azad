@@ -1,0 +1,327 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Book Detail{% endblock title %}
+
+{% block content %}
+
+{% include 'shamla_static/shamla_css.html' %}
+
+ <!-- Product Details Start -->
+ <div class="section section-padding-02 mt-n10">
+     <div class="container">
+         <div class="row justify-content-center">
+             <div class="col-lg-10">
+                 <!-- Product Details Content Start -->
+                 <div class="product-details-wrapper">
+                     <div class="row gx-md-10 align-items-xl-center">
+                        <input type="hidden" value="{{ object.id }}" id="book_id">
+                         <div class="col-md-6">
+                              <!-- Product Details Images Start -->
+                              <div class="product-details-images">
+                                <div class="swiper-container gallery-top">
+                                    <div class="swiper-wrapper">
+                                       {% for cover in object.bookcovers_set.all %}
+                                        <div class="swiper-slide">
+                                            <img src="{{ cover.image.url }}" alt="" height="500" width="430">
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="swiper-container gallery-thumbs">
+                                   <div class="swiper-wrapper">
+                                      {% for cover in object.bookcovers_set.all %}
+                                       <div class="swiper-slide">
+                                           <img src="{{ cover.image.url }}" width="78" height="85" alt="">
+                                       </div>
+                                       {% endfor %}
+                                   </div>
+                               </div>
+                            </div>
+                            <!-- Product Details Images End -->
+                         </div>
+                         <div class="col-md-6">
+                             <!-- Product Details Content Start -->
+                             <div class="product-details-content">
+                                 
+                                 <h4 class="product-title">{{ object.title }}</h4>
+                                 <div class="product-price-rating">
+                                   <div class="product-category">
+                                        <a href="#">
+                                            {% for genre in object.category.all %}
+                                            {{ genre.name }}, 
+                                            {% endfor %}
+                                        </a>
+                                    </div>
+                                     <div class="product-rating">
+                                         <div class="rating-star">
+                                             <div class="star" style="width: 80%;"></div>
+                                         </div>
+                                     </div>
+                                 </div>
+                                 <div class="product-info">
+                                     <div class="single-info">
+                                         <span class="label">Author:</span>
+                                         <span class="value">{{ object.author }}</span>
+                                     </div>
+                                     <div class="single-info">
+                                         <span class="label">Release Date:</span>
+                                         <span class="value">{{ object.release_date }}</span>
+                                     </div>
+                                     <div class="single-info">
+                                        <span class="label">ISBN:</span>
+                                        <span class="value">{{ object.isbn }}</span>
+                                    </div>
+                                    <div class="single-info">
+                                        <span class="label">Pages:</span>
+                                        <span class="value">{{ object.page }}</span>
+                                    </div>
+                                     <div class="single-info">
+                                         <span class="label">Type:</span><br>
+                                         <ul class="size" id="selected_book_type">
+                                            {% for type in object.booktypeprice_set.all %}
+                                             <li value="{{ type.id }}" class="{% if forloop.counter == 1 %}active{% endif %}">{{ type.book_type.name }}(${{ type.price }})</li>
+                                             {% endfor %}
+                                         </ul>
+                                     </div>
+                                     <div class="single-info">
+                                        <span class="label">Available On:</span>
+                                        <ul class="size">
+                                            {% for link in object.otherlink_set.all %}
+                                            <li><a href="{{ link.link }}" target="_blank">{{ link.platform }}</a></li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                     <div class="single-info">
+                                         <span class="label">Quantity:</span>
+                                         <div class="product-quantity d-inline-flex">
+                                             <button type="button" class="sub">-</button>
+                                             <input type="text" value="1" />
+                                             <button type="button" class="add">+</button>
+                                         </div>
+                                     </div>
+                                 </div>
+                                 <div class="product-cart-favourate">
+                                     <div class="product-cart">
+                                         <a href="#" onclick="callTheCartUpdater()" class="btn btn-info btn-hover-primary rounded-pill">Add to Cart</a>
+                                     </div>
+                                     <div class="product-favourate">
+                                         <a href="#" class="favourate"><i class="fa fa-heart-o"></i></a>
+                                     </div>
+                                 </div>
+                             </div>
+                             <!-- Product Details Content End -->
+                         </div>
+                     </div>
+                 </div>
+                 <!-- Product Details Content End -->
+             </div>
+         </div>
+
+         <!-- Product Details Tabs Start -->
+         <div class="product-details-tabs section-padding">
+             <ul class="nav nav-justified">
+                 <li class="nav-item"><a class="active" data-bs-toggle="tab" href="#description">Description</a></li>
+                 <li class="nav-item"><a data-bs-toggle="tab" href="#reviews">Reviews</a></li>
+             </ul>
+             <div class="tab-content" id="myTabContent">
+                 <div class="tab-pane fade show active" id="description">
+                     <div class="product-description">
+                         <p>{{ object.description }}</p>
+                     </div>
+                 </div>
+               
+                 <div class="tab-pane fade" id="reviews">
+                    {% if 2 == 1 %} 
+                    <div class="reviews">
+                        <h4 class="reviews-title">03 Reviews</h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="reviews-comment">
+                                    <ul class="comment-items">
+                                        <li>
+                                            <div class="single-comment">
+                                                <div class="comment-thumb">
+                                                    <img src="{% static 'shamla/assets/images/comment-1.jpg' %}" alt="">
+                                                </div>
+                                                <div class="comment-content">
+                                                    <div class="comment-name-date">
+                                                        <h5 class="name">Adam Gilcrist</h5>
+                                                        <span class="date">27 October, 2020</span>
+                                                    </div>
+                                                    <div class="comment-rating">
+                                                        <div class="rating-star" style="width: 80%;"></div>
+                                                    </div>
+                                                    <p>Rationally encounter consequences that extremely again is there anyone who loves or pursues or desires to obtain because</p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="single-comment">
+                                                <div class="comment-thumb">
+                                                    <img src="{% static 'shamla/assets/images/comment-1.jpg' %}" alt="">
+                                                </div>
+                                                <div class="comment-content">
+                                                    <div class="comment-name-date">
+                                                        <h5 class="name">Adam Gilcrist</h5>
+                                                        <span class="date">27 October, 2020</span>
+                                                    </div>
+                                                    <div class="comment-rating">
+                                                        <div class="rating-star" style="width: 87%;"></div>
+                                                    </div>
+                                                    <p>Rationally encounter consequences that extremely again is there anyone who loves or pursues or desires to obtain because</p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="single-comment">
+                                                <div class="comment-thumb">
+                                                    <img src="{% static 'shamla/assets/images/comment-1.jpg' %}" alt="">
+                                                </div>
+                                                <div class="comment-content">
+                                                    <div class="comment-name-date">
+                                                        <h5 class="name">Adam Gilcrist</h5>
+                                                        <span class="date">27 October, 2020</span>
+                                                    </div>
+                                                    <div class="comment-rating">
+                                                        <div class="rating-star" style="width: 48%;"></div>
+                                                    </div>
+                                                    <p>Rationally encounter consequences that extremely again is there anyone who loves or pursues or desires to obtain because</p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="reviews-form">
+                                    <h4 class="form-title">Add a Review</h4>
+
+                                    <form action="#">
+                                        <div class="reviews-rating">
+                                            <label>Your Rating:</label>
+                                            <ul id="rating" class="rating">
+                                                <li class="star" title='Poor' data-value='1'><i class="fa fa-star-o"></i></li>
+                                                <li class="star" title='Poor' data-value='2'><i class="fa fa-star-o"></i></li>
+                                                <li class="star" title='Poor' data-value='3'><i class="fa fa-star-o"></i></li>
+                                                <li class="star" title='Poor' data-value='4'><i class="fa fa-star-o"></i></li>
+                                                <li class="star" title='Poor' data-value='5'><i class="fa fa-star-o"></i></li>
+                                            </ul>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <div class="single-form">
+                                                    <input type="text" placeholder="Name">
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="single-form">
+                                                    <input type="email" placeholder="Email">
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <div class="single-form">
+                                                    <textarea placeholder="Your Review"></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <div class="single-form">
+                                                    <button class="btn btn-primary btn-hover-dark rounded-pill">Send</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="reviews text-center">
+                        <h3>Review will be live soon ...</h3>
+                    </div>
+                    {% endif %}
+                 </div>
+             </div>
+         </div>
+         <!-- Product Details Tabs End -->
+
+          <!-- Related Products Start -->
+          <div class="related-products section-padding mt-n2">
+               <div class="section-title">
+                   <h2 class="title">Other Books</h2>
+               </div>
+               <div class="product-active">
+                   <div class="swiper-container">
+                       <div class="swiper-wrapper">
+
+                        {% for book in other_books%}
+                           <div class="swiper-slide">
+                              <!-- Single-Product Start -->
+                              <div class="single-product">
+                                <div class="product-image">
+                                     <div class="product-slide swiper-container ">
+                                          <div class="swiper-wrapper">
+                                               {% for cover in book.bookcovers_set.all %}
+                                               <div class="swiper-slide">
+                                                    <a href="{{ book.get_absolute_url }}">
+                                                         <img src="{{ cover.image.url }}"
+                                                              alt="book" width="270" height="330">
+                                                    </a>
+                                               </div>
+                                               {% endfor %}
+                                          </div>
+                                          <!-- Add Pagination -->
+                                          <div class="swiper-pagination"></div>
+                                     </div>
+                                     <span class="product-label hot">
+                                          {{ book.category.last.name }}
+                                     </span>
+                                </div>
+                                <div class="product-content">
+                                     <div class="product-category-action">
+                                          <div class="product-category">
+                                               <a href="{{ book.get_absolute_url }}">View Other Type/Price</a>
+                                          </div>
+                                          <div class="product-action">
+                                               <a href="#" onclick="callTheCartUpdater()" class="action" data-tooltip="tooltip" data-placement="top"
+                                                    title="Add to Cart"><i class="fa fa-shopping-cart"></i></a>
+                                          </div>
+                                     </div>
+                                     <h4 class="product-title"><a href="{{ book.get_absolute_url }}">{{ book.title }}</a></h4>
+                                     <div class="product-price">
+                                          <span class="">{{ book.booktypeprice_set.first.book_type.name }}</span>
+                                          <span class="sale-price">${{ book.booktypeprice_set.first.price }}</span>
+                                     </div>
+                                </div>
+                           </div>
+                           <!-- Single-Product End -->
+                           </div>
+                           {% endfor %}
+
+                       </div>
+                   </div>
+               </div>
+           </div>
+           <!-- Related Products End -->
+
+     </div>
+ </div>
+ <!-- Product Details End -->
+
+
+
+{% include 'shamla_static/shamla_js.html' %}
+
+{% endblock content %}
+
+{% block script %}
+<script>
+    function callTheCartUpdater() {
+        var bookType = ''
+        if($('#selected_book_type').find('li.active').val() != 0) {
+            bookType = $('#selected_book_type').find('li.active').val()
+        }
+        updateCartItem($('#book_id').val(), 'add', bookType)
+    }
+</script>
+{% include 'book/js_file/update_cart_script.html' %}
+{% endblock script %}
