@@ -1,6 +1,6 @@
 asgiref==3.7.2
 astroid==2.11.7
-backports.zoneinfo==0.2.1
+backports.zoneinfo;python_version<"3.9"
 certifi==2022.6.15
 charset-normalizer==2.1.0
 coverage==7.3.2
