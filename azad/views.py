@@ -14,7 +14,6 @@ class Home(View):
           return render(request, self.template_name, {'books': books})
 
 
-
 class About(View):
      template_name = 'home/about.html'
      
