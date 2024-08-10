@@ -1,4 +1,4 @@
-# Project Name: [Your Blog & Ecommerce Platform]
+# Portfolio + Blog + E-Commerce + Analytics
 
 ## Overview
 
